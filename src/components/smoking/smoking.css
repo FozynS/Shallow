@@ -1,0 +1,104 @@
+select, label, input {
+  cursor: pointer;
+}
+
+.custom-select {
+  position: relative;
+}
+
+.select-trigger {
+  box-sizing: border-box;
+  display: flex;
+  background-color: #f4f4f4;
+  border: 1px solid #ccc;
+  width: 300px;
+  height: 30px;
+  cursor: pointer;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+}
+
+.options {
+  box-sizing: border-box;
+  width: 300px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-top: 2px solid #249ac2;
+}
+
+.options label {
+  display: block;
+  padding: 8px 10px;
+}
+
+.options label:hover {
+  background-color: #f9f9f9;
+}
+
+.variant-of-smoking {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-left: 25px;
+}
+.variant-of-smoking label{
+  display: flex;
+  align-items: center;
+  width: 100px;
+}
+
+.limitation { 
+  margin-left: 50px;
+}
+
+input[type="radio"] {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 1.5px solid #249ac2;
+  border-radius: 50%;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+input[type="radio"]:checked::before {
+  content: '';
+  width: 15px;
+  height: 15px;
+  display: block;
+  background-color: #249ac2;
+  border-radius: 50%;
+  margin: 1px;
+}
+
+input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #249ac2;
+  border-radius: 4px;
+  outline: none;
+  transition: background-color 0.3s ease;
+  position: relative;
+}
+
+input[type="checkbox"]:checked {
+  background-color: #249ac2;
+}
+
+input[type="checkbox"]:checked::before {
+  content: '';
+  position: absolute;
+  width: 4px;
+  height: 10px;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+  top: 0px;
+  left: 5px;
+}

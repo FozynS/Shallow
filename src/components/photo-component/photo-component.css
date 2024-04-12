@@ -1,0 +1,110 @@
+.error {
+  color: red;
+}
+
+.section {
+  display: flex;
+  gap: 150px;
+}
+
+.upload-wrapper {
+  position: relative;
+  width: 300px;
+  height: 300px;
+  background-color: rgba(112, 126, 147, 1);
+  margin-top: 50px;
+}
+.upload-wrapper > img {
+  width: 30%;
+  height: 30%;
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.clue {
+  position: absolute;
+  bottom: 0;
+  background-color: rgba(215, 226, 233, 1);
+  width: 100%;
+  height: 70px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.clue img {
+  width: 50px;
+  height: 20px;
+}
+.clue p {
+  font-size: 10px;
+  line-height: 12px;
+  width: 45%;
+  margin: 0;;
+  text-align: start;
+  color: #707E93;
+}
+
+.input-file {
+  width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}
+.input-file + label {
+  display: flex;
+  align-items: center;
+  font-size: 1.25em;
+  font-weight: 700;
+}
+.inputfile:focus + label {
+	outline: 1px dotted #000;
+	outline: -webkit-focus-ring-color auto 5px;
+}
+
+.photo-change-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  margin-top: 50px;
+}
+.image-container {
+  overflow: hidden;
+  height: 300px;
+  width: 300px;
+}
+.image-container > img {
+  object-fit: contain;
+  transform-origin: center;
+}
+
+
+.change-photo {
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  width: 100%;
+  height: 40px;
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translate(-50%, 50%);
+  background-color: #D7E2E9CC;
+  opacity: 0.8;
+  font-size: 20px;
+  color: #182F53;
+}
+.change-photo > span:first-child{
+  color: #707E93;
+  cursor: pointer;
+}
+.change-photo > span:last-child{
+  color: #182F53;
+  cursor: pointer;
+}
