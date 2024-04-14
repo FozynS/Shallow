@@ -108,3 +108,38 @@
   color: #182F53;
   cursor: pointer;
 }
+
+.input-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+#range2 {
+  -webkit-appearance: none;
+  appearance: none; 
+  width: 100%;
+  cursor: pointer;
+  outline: none;
+  height: 3px;
+  background: #ccc;
+}
+
+#range2::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none; 
+  height: 15px;
+  width: 15px;
+  background-color: #259AC2;
+  border-radius: 50%;
+  border: none;
+  transition: .2s ease-in-out;
+}
+
+#range2::-moz-range-thumb {
+  height: 15px;
+  width: 15px;
+  background-color: #259AC2;
+  border-radius: 50%;
+  border: none;
+  transition: .2s ease-in-out;
+}

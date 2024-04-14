@@ -49,10 +49,12 @@ function Photo ():JSX.Element {
     }
   };
 
-  const handleSliderChange = (event: ChangeEvent<HTMLInputElement>) :void => {
+  const handleSliderChange = (event: ChangeEvent<HTMLInputElement>): void => {
     const value = parseInt(event.target.value);
     setSliderValue(value);
-  }
+  };
+
+  const progress = (sliderValue / 100) * 100; 
 
   return (
     <section className='section'>
@@ -70,21 +72,28 @@ function Photo ():JSX.Element {
       {imageUrl ? (
         <div className='photo-change-wrapper'>
           <div className='image-container'>
-            <img src={imageUrl ? imageUrl : ''} alt="#" style={{width: `${sliderValue}%`, height: 'auto'}}/>
+            <img
+              src={imageUrl ? imageUrl : ''}
+              alt="#"
+              style={{
+                transform: `scale(${sliderValue / 100})`,
+                transformOrigin: 'top left'
+              }}
+            />
           </div>
           <div className='change-photo'>
             <span>X</span>
             <div className='input-wrapper'>
               <span>-</span>
-              <input 
-                className='styled-slider slider-progress' 
-                type="range" 
-                min="0" 
-                max="100" 
-                step="1" 
-                defaultValue="50"
+              <input
+                type="range"
+                id="range2"
+                min="0"
+                max="100"
+                value={sliderValue}
                 onChange={handleSliderChange}
-              /> 
+                style={{background: `linear-gradient(to right, #259AC2 ${progress}%, #ccc ${progress}%)`}}
+              />
               <span>+</span>
             </div>
             <span>&#10003;</span>
