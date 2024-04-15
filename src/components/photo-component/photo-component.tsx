@@ -5,10 +5,18 @@ function Photo ():JSX.Element {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [sliderValue, setSliderValue] = useState<number>(50);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [originalWidth, setOriginalWidth] = useState<number>(0);
+  const [originalHeight, setOriginalHeight] = useState<number>(0);
+  const [imageSize, setImageSize] = useState<{ width: number; height: number }>({
+    width: 0,
+    height: 0,
+  });
 
   const validateImage = (file: File): Promise<boolean> => {
     const allowedExtensions = ['jpeg', 'jpg', 'png', 'heic', 'heif'];
     const fileExtension = file.name.split('.').pop()?.toLowerCase();
+
     return new Promise((resolve) => {
       if (file.size > 20 * 1024 * 1024) {
         setError('Размер файла превышает 20МБ.');
@@ -19,7 +27,9 @@ function Photo ():JSX.Element {
       } else {
         const image = new Image();
         image.src = URL.createObjectURL(file);
+        setIsLoading(true);
         image.onload = () => {
+          setIsLoading(false);
           URL.revokeObjectURL(image.src);
           if (image.width < 200 || image.height < 200 || image.width > 8192 || image.height > 8192) {
             setError('Размеры изображения должны быть от 200x200 до 8192x8192px.');
@@ -42,24 +52,36 @@ function Photo ():JSX.Element {
         reader.onload = () => {
           if (typeof reader.result === 'string') {
             setImageUrl(reader.result);
+            const image = new Image();
+            
+            image.src = reader.result;
+            image.onload = () => {
+              setOriginalWidth(image.width);
+              setOriginalHeight(image.height);
+              setImageSize({ width: image.width, height: image.height });
+            };
           }
         };
         reader.readAsDataURL(file);
       }
     }
   };
-
+  
   const handleSliderChange = (event: ChangeEvent<HTMLInputElement>): void => {
     const value = parseInt(event.target.value);
     setSliderValue(value);
+    const newWidth = originalWidth * (value / 100);
+    const newHeight = originalHeight * (value / 100);
+    
+    setImageSize({ width: newWidth, height: newHeight });
   };
-
+  
   const progress = (sliderValue / 100) * 100; 
 
   return (
     <section className='section'>
       <div className='upload-wrapper'>
-        <img src="./img/AddPhoto.svg" alt="#" />
+        <img src="/img/AddPhoto.svg" alt="#" />
         <div className='clue'>
           <input type="file" name='file' id='file' className='input-file' onChange={handleFileChange}/>
           <label htmlFor="file">
@@ -68,6 +90,7 @@ function Photo ():JSX.Element {
           </label>
         </div>
       </div>
+      {isLoading && <div>Loading...</div>}
       {error ? <div className="error">{error}</div> : null}
       {imageUrl ? (
         <div className='photo-change-wrapper'>
@@ -76,8 +99,9 @@ function Photo ():JSX.Element {
               src={imageUrl ? imageUrl : ''}
               alt="#"
               style={{
-                transform: `scale(${sliderValue / 100})`,
-                transformOrigin: 'top left'
+                width: `${imageSize.width}px`,
+                height: `${imageSize.height}px`,
+                transformOrigin: 'top left',
               }}
             />
           </div>
