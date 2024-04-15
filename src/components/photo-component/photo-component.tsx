@@ -81,7 +81,7 @@ function Photo ():JSX.Element {
   return (
     <section className='section'>
       <div className='upload-wrapper'>
-        <img src="/img/AddPhoto.svg" alt="#" />
+        <img src="./img/AddPhoto.svg" alt="#" />
         <div className='clue'>
           <input type="file" name='file' id='file' className='input-file' onChange={handleFileChange}/>
           <label htmlFor="file">
