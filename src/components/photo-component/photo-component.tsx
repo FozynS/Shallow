@@ -70,8 +70,8 @@ function Photo ():JSX.Element {
   const handleSliderChange = (event: ChangeEvent<HTMLInputElement>): void => {
     const value = parseInt(event.target.value);
     setSliderValue(value);
-    const newWidth = originalWidth * (value / 100);
-    const newHeight = originalHeight * (value / 100);
+    const newWidth = originalWidth * (value / 200);
+    const newHeight = originalHeight * (value / 200);
     
     setImageSize({ width: newWidth, height: newHeight });
   };
@@ -101,7 +101,6 @@ function Photo ():JSX.Element {
               style={{
                 width: `${imageSize.width}px`,
                 height: `${imageSize.height}px`,
-                transformOrigin: 'top left',
               }}
             />
           </div>
