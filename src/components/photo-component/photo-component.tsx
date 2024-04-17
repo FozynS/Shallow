@@ -1,17 +1,13 @@
 import { ChangeEvent, useState } from 'react';
-import './photo-component.css'
+import './photo-component.css';
+import Cropper from 'react-easy-crop';
 
 function Photo ():JSX.Element {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [sliderValue, setSliderValue] = useState<number>(50);
+  const [crop, setCrop] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState<number>(1);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [originalWidth, setOriginalWidth] = useState<number>(0);
-  const [originalHeight, setOriginalHeight] = useState<number>(0);
-  const [imageSize, setImageSize] = useState<{ width: number; height: number }>({
-    width: 0,
-    height: 0,
-  });
 
   const validateImage = (file: File): Promise<boolean> => {
     const allowedExtensions = ['jpeg', 'jpg', 'png', 'heic', 'heif'];
@@ -53,13 +49,7 @@ function Photo ():JSX.Element {
           if (typeof reader.result === 'string') {
             setImageUrl(reader.result);
             const image = new Image();
-            
             image.src = reader.result;
-            image.onload = () => {
-              setOriginalWidth(image.width);
-              setOriginalHeight(image.height);
-              setImageSize({ width: image.width, height: image.height });
-            };
           }
         };
         reader.readAsDataURL(file);
@@ -67,16 +57,15 @@ function Photo ():JSX.Element {
     }
   };
   
-  const handleSliderChange = (event: ChangeEvent<HTMLInputElement>): void => {
-    const value = parseInt(event.target.value);
-    setSliderValue(value);
-    const newWidth = originalWidth * (value / 200);
-    const newHeight = originalHeight * (value / 200);
-    
-    setImageSize({ width: newWidth, height: newHeight });
+  const onCropChange = (crop: { x: number; y: number }): void => {
+    setCrop(crop);
+  };
+
+  const onZoomChange = (zoom: number): void => {
+    setZoom(zoom);
   };
   
-  const progress = (sliderValue / 100) * 100; 
+  const progress = (zoom - 1) / (3 - 1) * 100;
 
   return (
     <section className='section'>
@@ -95,13 +84,14 @@ function Photo ():JSX.Element {
       {imageUrl ? (
         <div className='photo-change-wrapper'>
           <div className='image-container'>
-            <img
-              src={imageUrl ? imageUrl : ''}
-              alt="#"
-              style={{
-                width: `${imageSize.width}px`,
-                height: `${imageSize.height}px`,
-              }}
+            <Cropper
+              image={imageUrl}
+              crop={crop}
+              zoom={zoom}
+              aspect={4 / 3}
+              onCropChange={onCropChange}
+              onZoomChange={onZoomChange}
+              cropShape="rect"
             />
           </div>
           <div className='change-photo'>
@@ -110,11 +100,12 @@ function Photo ():JSX.Element {
               <span>-</span>
               <input
                 type="range"
-                id="range2"
-                min="0"
-                max="100"
-                value={sliderValue}
-                onChange={handleSliderChange}
+                id="range"
+                min={1}
+                max={3}
+                step={0.1}
+                value={zoom}
+                onChange={(event) => setZoom(Number(event.target.value))}
                 style={{background: `linear-gradient(to right, #259AC2 ${progress}%, #ccc ${progress}%)`}}
               />
               <span>+</span>

@@ -1,4 +1,3 @@
-import './App.css';
 import Photo from './components/photo-component/photo-component';
 import Smoking from './components/smoking/smoking';
 
