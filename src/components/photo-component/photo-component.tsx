@@ -92,6 +92,7 @@ function Photo ():JSX.Element {
               onCropChange={onCropChange}
               onZoomChange={onZoomChange}
               cropShape="rect"
+              cropSize={{ width: 200, height: 200 }}
             />
           </div>
           <div className='change-photo'>
