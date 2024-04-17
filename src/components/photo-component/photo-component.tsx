@@ -64,24 +64,23 @@ function Photo ():JSX.Element {
   const onZoomChange = (zoom: number): void => {
     setZoom(zoom);
   };
-  
+
   const progress = (zoom - 1) / (3 - 1) * 100;
 
   return (
     <section className='section'>
-      <div className='upload-wrapper'>
-        <img src="./img/AddPhoto.svg" alt="#" />
-        <div className='clue'>
-          <input type="file" name='file' id='file' className='input-file' onChange={handleFileChange}/>
-          <label htmlFor="file">
-            <img src="./img/Upload.svg" alt="#" />
-            <p>Обличчя. До 20МБ <span>200*200 - 8192*8192px</span> jpeg, jpg, png, heic, heif</p>
-          </label>
+      {!imageUrl ? (
+        <div className='upload-wrapper'>
+          <img src="./img/AddPhoto.svg" alt="#" />
+          <div className='clue'>
+            <input type="file" name='file' id='file' className='input-file' onChange={handleFileChange}/>
+            <label htmlFor="file">
+              <img src="./img/Upload.svg" alt="#" />
+              <p>Обличчя. До 20МБ <span>200*200 - 8192*8192px</span> jpeg, jpg, png, heic, heif</p>
+            </label>
+          </div>
         </div>
-      </div>
-      {isLoading && <div>Loading...</div>}
-      {error ? <div className="error">{error}</div> : null}
-      {imageUrl ? (
+      ) : (
         <div className='photo-change-wrapper'>
           <div className='image-container'>
             <Cropper
@@ -114,8 +113,9 @@ function Photo ():JSX.Element {
             <span>&#10003;</span>
           </div>
         </div>
-      ) : null}
-      
+      )}
+      {isLoading && <div>Loading...</div>}
+      {error ? <div className="error">{error}</div> : null}
     </section>
   );
 }
