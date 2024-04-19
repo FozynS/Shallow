@@ -1,6 +1,7 @@
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useRef, useState } from 'react';
 import './photo-component.css';
-import Cropper from 'react-easy-crop';
+import Cropper, { Area } from 'react-easy-crop';
+import html2canvas from 'html2canvas';
 
 function Photo ():JSX.Element {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
@@ -8,6 +9,8 @@ function Photo ():JSX.Element {
   const [crop, setCrop] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [zoom, setZoom] = useState<number>(1);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [croppedArea, setCroppedArea] = useState<Area | null>(null);
+  const cropperRef = useRef<any>(null);
 
   const validateImage = (file: File): Promise<boolean> => {
     const allowedExtensions = ['jpeg', 'jpg', 'png', 'heic', 'heif'];
@@ -65,6 +68,66 @@ function Photo ():JSX.Element {
     setZoom(zoom);
   };
 
+  const onCropComplete = (croppedAreaPercentage: Area, croppedAreaPixels: Area): void => {
+    setCroppedArea(croppedAreaPixels);
+  };
+
+  const handleDownload = async () => {
+    const cropper = cropperRef.current;
+    if (!cropper || !croppedArea || !imageUrl) return;
+
+    try {
+      const croppedImageBlob = await getCroppedImageBlob(imageUrl, croppedArea);
+
+      const link = document.createElement('a');
+      link.download = 'cropped-image.png';
+      link.href = URL.createObjectURL(croppedImageBlob);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error('Failed to download cropped image:', error);
+    }
+  };
+
+
+  const getCroppedImageBlob = (imageSrc: string, croppedArea: Area): Promise<Blob> => {
+    return new Promise((resolve) => {
+      const image = new Image();
+      image.onload = () => {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        if (!ctx) throw new Error('Failed to create canvas context.');
+
+        canvas.width = croppedArea.width;
+        canvas.height = croppedArea.height;
+
+        ctx.drawImage(
+          image,
+          croppedArea.x,
+          croppedArea.y,
+          croppedArea.width,
+          croppedArea.height,
+          0,
+          0,
+          croppedArea.width,
+          croppedArea.height
+        );
+
+        canvas.toBlob((blob) => {
+          if (!blob) throw new Error('Failed to create blob.');
+          resolve(blob);
+        }, 'image/png', 1);
+      };
+      image.onerror = () => {
+        throw new Error('Failed to load image.');
+      };
+      image.src = imageSrc;
+    });
+  };
+
+
+
   const progress = (zoom - 1) / (3 - 1) * 100;
 
   return (
@@ -84,12 +147,14 @@ function Photo ():JSX.Element {
         <div className='photo-change-wrapper'>
           <div className='image-container'>
             <Cropper
+              ref={cropperRef}
               image={imageUrl}
               crop={crop}
               zoom={zoom}
               aspect={4 / 3}
               onCropChange={onCropChange}
               onZoomChange={onZoomChange}
+              onCropComplete={onCropComplete}
               cropShape="rect"
               cropSize={{ width: 200, height: 200 }}
             />
@@ -110,7 +175,7 @@ function Photo ():JSX.Element {
               />
               <span>+</span>
             </div>
-            <span>&#10003;</span>
+            <span onClick={handleDownload}>&#10003;</span>
           </div>
         </div>
       )}
