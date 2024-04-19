@@ -1,7 +1,6 @@
 import { ChangeEvent, useRef, useState } from 'react';
 import './photo-component.css';
 import Cropper, { Area } from 'react-easy-crop';
-import html2canvas from 'html2canvas';
 
 function Photo ():JSX.Element {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
